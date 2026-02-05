@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: delivereats_user
+      POSTGRES_PASSWORD: delivereats/22418
+      POSTGRES_DB: delivereats_auth
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - delivereats-network
+
+  auth-service:
+    build: ./auth-service
+    env_file:
+      - ./auth-service/.env
+    depends_on:
+      - postgres
+    ports:
+      - "50051:50051"
+    volumes:
+      - ./proto:/app/proto:ro
+    networks:
+      - delivereats-network
+
+  gateway:
+    build: ./gateway
+    env_file:
+      - ./gateway/.env
+    depends_on:
+      - auth-service
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./proto:/app/proto:ro
+    networks:
+      - delivereats-network
+
+  frontend:
+    build: ./Frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - gateway
+    networks:
+      - delivereats-network
+
+volumes:
+  pgdata:
+
+networks:
+  delivereats-network:
+    driver: bridge
