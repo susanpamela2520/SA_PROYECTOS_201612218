@@ -29,14 +29,61 @@ export class AuthService {
   }
 
   async login(dto: any) {
+    console.log('🔍 Buscando usuario:', dto.email);
+
     const user = await this.users.findByEmail(dto.email);
-    if (!user) return { ok: false, message: 'Credenciales inválidas', token: '' };
+
+    if (!user) {
+      console.log('❌ Usuario NO encontrado');
+      return { ok: false, message: 'Credenciales inválidas', token: '' };
+    }
+
+    console.log('✅ Usuario encontrado:', user.email);
+    console.log('📊 Rol:', user.rol);
+    console.log('🔐 Hash almacenado:', user.passwordHash.substring(0, 30) + '...');
+    console.log('🔑 Contraseña recibida:', dto.password);
 
     const okPass = await this.pass.compare(dto.password, user.passwordHash);
-    if (!okPass) return { ok: false, message: 'Credenciales inválidas', token: '' };
 
-    const token = this.tokens.sign({ sub: user.id, role: user.rol, email: user.email });
+    console.log('🎯 Resultado comparación:', okPass);
 
-    return { ok: true, message: 'Login OK', token };
+    if (!okPass) {
+      console.log('❌ Contraseña incorrecta');
+      return { ok: false, message: 'Credenciales inválidas', token: '' };
+    }
+
+    console.log('✅ Contraseña correcta, generando token...');
+
+    const role = String(user.rol || '');
+
+    const token = this.tokens.sign({
+      sub: user.id,
+      role: role,
+      email: user.email,
+    });
+
+    console.log('🎫 Token generado exitosamente');
+    console.log('📦 Respuesta que se enviará:', {
+      ok: true,
+      userEmail: user.email,
+      userRole: role,
+      tokenLength: token.length,
+    });
+
+    return {
+      ok: true,
+      message: 'Login OK',
+      token,
+      user: {
+        email: user.email,
+        role: role, // ✅ frontend usa user.role
+        rol: role,  // ✅ por si algún lado usa user.rol
+        nombreCompleto: user.nombreCompleto,
+      },
+    };
+  }
+
+  async generateHash(password: string) {
+    return await this.pass.hash(password);
   }
 }

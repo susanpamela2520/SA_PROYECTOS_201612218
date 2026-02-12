@@ -1,4 +1,5 @@
 services:
+  # ========== BASE DE DATOS ==========
   postgres:
     image: postgres:16
     environment:
@@ -8,10 +9,37 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata-auth:/var/lib/postgresql/data
     networks:
       - delivereats-network
 
+  postgres-catalog:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: delivereats_user
+      POSTGRES_PASSWORD: delivereats/22418
+      POSTGRES_DB: delivereats_catalog
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata-catalog:/var/lib/postgresql/data
+    networks:
+      - delivereats-network
+
+  postgres-orders:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: delivereats_user
+      POSTGRES_PASSWORD: delivereats/22418
+      POSTGRES_DB: delivereats_orders
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata-orders:/var/lib/postgresql/data
+    networks:
+      - delivereats-network
+
+  # ========== MICROSERVICIOS ==========
   auth-service:
     build: ./auth-service
     env_file:
@@ -25,12 +53,40 @@ services:
     networks:
       - delivereats-network
 
+  catalog-service:
+    build: ./catalog-service
+    env_file:
+      - ./catalog-service/.env
+    depends_on:
+      - postgres-catalog
+    ports:
+      - "50052:50052"
+    volumes:
+      - ./proto:/app/proto:ro
+    networks:
+      - delivereats-network
+
+  order-service:
+    build: ./order-service
+    env_file:
+      - ./order-service/.env
+    depends_on:
+      - postgres-orders
+      - catalog-service
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./proto:/app/proto:ro
+    networks:
+      - delivereats-network
+
   gateway:
     build: ./gateway
     env_file:
       - ./gateway/.env
     depends_on:
       - auth-service
+      - order-service
     ports:
       - "3000:3000"
     volumes:
@@ -48,7 +104,9 @@ services:
       - delivereats-network
 
 volumes:
-  pgdata:
+  pgdata-auth:
+  pgdata-catalog:
+  pgdata-orders:
 
 networks:
   delivereats-network:

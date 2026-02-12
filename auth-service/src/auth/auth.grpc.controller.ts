@@ -16,4 +16,10 @@ export class AuthGrpcController {
   login(data: any) {
     return this.auth.login(data);
   }
+
+  @GrpcMethod('AuthService', 'GenerateHash')
+async generateHash(data: { password: string }) {
+  const hash = await this.auth.generateHash(data.password);
+  return { hash };
+}
 }

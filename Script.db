@@ -1,0 +1,37 @@
+
+INSERT INTO productos (restaurant_id, nombre, precio, disponible, descripcion) VALUES
+(1, 'Pizza Margarita', 12.99, true, 'Pizza con mozzarella y albahaca'),
+(1, 'Pizza Pepperoni', 14.99, true, 'Pizza con pepperoni y queso'),
+(1, 'Pasta Carbonara', 11.50, true, 'Pasta con salsa carbonara'),
+(1, 'Lasagna', 13.99, true, 'Lasagna de carne'),
+(1, 'Tiramisú', 6.50, false, 'Postre italiano - NO DISPONIBLE'),
+(2, 'Hamburguesa Clásica', 8.99, true, 'Hamburguesa con queso y vegetales'),
+(2, 'Hamburguesa BBQ', 9.99, true, 'Hamburguesa con salsa BBQ'),
+(2, 'Papas Fritas', 3.50, true, 'Papas fritas crujientes'),
+(2, 'Hot Dog', 5.99, true, 'Hot dog con mostaza y ketchup'),
+(2, 'Malteada', 4.50, false, 'Malteada de chocolate - NO DISPONIBLE'),
+(3, 'Sushi Roll California', 15.99, true, 'Roll de cangrejo y aguacate'),
+(3, 'Sashimi Salmón', 18.50, true, '8 piezas de salmón'),
+(3, 'Ramen Miso', 12.99, true, 'Ramen con pasta miso'),
+(3, 'Gyoza', 7.50, true, 'Dumplings japoneses'),
+(3, 'Tempura', 9.99, false, 'Vegetales tempura - NO DISPONIBLE');
+
+
+
+
+-------------------------------------------------
+
+Insert de Usuario en Admn
+INSERT INTO usuarios (email, password_hash, rol, nombre_completo, telefono)
+VALUES (
+  'admin@delivereats.com',
+  '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+  'ADMIN',
+  'Administrador del Sistema',
+  '00000000'
+);
+
+
+CREDENCIALES
+Email: admin@delivereats.com
+Contraseña: password
