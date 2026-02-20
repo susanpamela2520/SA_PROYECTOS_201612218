@@ -1,0 +1,118 @@
+version: "3.8"
+
+services:
+  # --- BASES DE DATOS ---
+  auth-db:
+    image: postgres:latest
+    container_name: auth_db_container
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: auth_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql
+    networks:
+      - delivereats-network
+
+  restaurant-db:
+    image: postgres:latest
+    container_name: restaurant_db_container
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: restaurant_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql
+    networks:
+      - delivereats-network
+
+  order-db:
+    image: postgres:latest
+    container_name: order_db_container
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: order_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql
+    networks:
+      - delivereats-network
+
+  # --- MICROSERVICIOS ---
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth_service_container
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_HOST: auth-db
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: 123
+      DATABASE_NAME: auth_db
+    depends_on:
+      - auth-db
+    networks:
+      - delivereats-network
+
+  restaurant-service:
+    build: ./restaurant-service
+    container_name: restaurant_service_container
+    ports:
+      - "3002:3002"
+    environment:
+      DATABASE_HOST: restaurant-db
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: 123
+      DATABASE_NAME: restaurant_db
+    depends_on:
+      - restaurant-db
+    networks:
+      - delivereats-network
+
+  order-service:
+    build: ./order-service
+    container_name: order_service_container
+    ports:
+      - "3003:3003"
+    environment:
+      DATABASE_HOST: order-db
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: 123
+      DATABASE_NAME: order_db
+    depends_on:
+      - order-db
+    networks:
+      - delivereats-network
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api_gateway_container
+    ports:
+      - "3000:3000"
+    environment:
+      AUTH_SERVICE_HOST: auth-service
+      RESTAURANT_SERVICE_HOST: restaurant-service
+      ORDER_SERVICE_HOST: order-service
+    depends_on:
+      - auth-service
+      - restaurant-service
+      - order-service
+    networks:
+      - delivereats-network
+
+networks:
+  delivereats-network:
+    driver: bridge
