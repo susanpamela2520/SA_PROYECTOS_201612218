@@ -1,0 +1,52 @@
+<app-navbar></app-navbar>
+<div class="order-container animate-fade-in">
+  <header class="order-header">
+    <button mat-icon-button routerLink="/dashboard" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="header-text">
+      <h1>Menú del Restaurante</h1>
+      <p class="subtitle">Selecciona tus platillos favoritos</p>
+    </div>
+  </header>
+
+  <div class="menu-grid">
+    @for (item of menu(); track item.id) {
+      <mat-card class="order-item-card" appearance="raised">
+        <mat-card-header>
+          <mat-card-title class="item-name">{{ item.name }}</mat-card-title>
+          <div class="price-badge">Q{{ item.price | number: "1.2-2" }}</div>
+        </mat-card-header>
+
+        <mat-card-content class="item-body">
+          <p class="description">{{ item.description }}</p>
+        </mat-card-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-card-actions>
+          <button
+            mat-flat-button
+            color="primary"
+            class="add-cart-btn"
+            (click)="addToCart(item)"
+          >
+            <mat-icon>add_shopping_cart</mat-icon>
+            AGREGAR AL CARRITO
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    } @empty {
+      <div class="empty-state">
+        <div class="empty-icon-wrapper">
+          <mat-icon>no_meals</mat-icon>
+        </div>
+        <h3>La cocina está en silencio</h3>
+        <p>Aún no hay platos disponibles en este menú.</p>
+        <button mat-button color="primary" routerLink="/dashboard">
+          Regresar al catálogo
+        </button>
+      </div>
+    }
+  </div>
+</div>

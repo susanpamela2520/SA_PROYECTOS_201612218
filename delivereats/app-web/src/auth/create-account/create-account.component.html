@@ -1,0 +1,105 @@
+<div class="ca-wrapper animate-fade-in">
+  <mat-card appearance="raised" class="ca-card">
+    <div class="ca-container">
+      <div class="ca-side ca-decoration">
+        <div class="ca-content">
+          <mat-icon class="ca-main-icon">local_shipping</mat-icon>
+          <h2>Bienvenido</h2>
+          <p>
+            Regístrate hoy y comienza tu camino hacia la dulzura de comer. 🍔
+          </p>
+          <div class="back-to-login">
+            <span>¿Ya tienes cuenta?</span>
+            <button mat-button color="primary" routerLink="/login">
+              Inicia sesión
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="ca-side ca-form-container">
+        <form [formGroup]="form" (ngSubmit)="createAccount()" class="ca-form">
+          <h3 class="form-title">Nueva Cuenta</h3>
+
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre</mat-label>
+              <mat-icon matPrefix>person</mat-icon>
+              <input
+                matInput
+                formControlName="firstName"
+                placeholder="Jhon"
+                required
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Apellido</mat-label>
+              <mat-icon matPrefix>person_outline</mat-icon>
+              <input
+                matInput
+                formControlName="lastName"
+                placeholder="Doe"
+                required
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Correo electrónico</mat-label>
+              <mat-icon matPrefix>email</mat-icon>
+              <input
+                matInput
+                formControlName="email"
+                placeholder="pat@example.com"
+                required
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>¿Qué harás en Delivereats?</mat-label>
+              <mat-icon matPrefix>work</mat-icon>
+              <mat-select formControlName="role" required>
+                @for (rol of rolOptions; track rol.value) {
+                  <mat-option [value]="rol.value">{{ rol.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Contraseña</mat-label>
+              <mat-icon matPrefix>lock</mat-icon>
+              <input
+                matInput
+                formControlName="password"
+                [type]="hide() ? 'password' : 'text'"
+              />
+              <button
+                type="button"
+                mat-icon-button
+                matSuffix
+                (click)="showPassword($event)"
+                [attr.aria-label]="'Ocultar contraseña'"
+              >
+                <mat-icon>{{
+                  hide() ? "visibility_off" : "visibility"
+                }}</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+
+          <div class="form-actions">
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="form.invalid"
+              class="submit-btn"
+            >
+              CREAR CUENTA
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-card>
+</div>

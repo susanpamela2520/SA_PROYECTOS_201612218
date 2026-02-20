@@ -1,0 +1,59 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon>{{ data ? "edit" : "add_business" }}</mat-icon>
+  {{ data ? "Editar" : "Nuevo" }} Restaurante
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="form-container">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <mat-icon matPrefix>store</mat-icon>
+      <input matInput formControlName="name" placeholder="Ej: Pizza Hut" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Categoría</mat-label>
+      <mat-icon matPrefix>category</mat-icon>
+      <input
+        matInput
+        formControlName="category"
+        placeholder="Ej: Italiana, Sushi..."
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Horario de Atención</mat-label>
+      <mat-icon matPrefix>schedule</mat-icon>
+      <input
+        matInput
+        formControlName="horario"
+        placeholder="Ej: Lun-Vie 08:00 - 20:00"
+      />
+      <mat-hint>Indica los días y horas de apertura</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Dirección Exacta</mat-label>
+      <mat-icon matPrefix>location_on</mat-icon>
+      <textarea
+        matInput
+        formControlName="address"
+        placeholder="Ej: 4ta Avenida, zona 10..."
+        rows="3"
+      ></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="form.invalid"
+    (click)="onSave()"
+  >
+    <mat-icon>save</mat-icon>
+    Guardar
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,89 @@
+<mat-toolbar color="primary" class="main-toolbar mat-elevation-z4">
+  <div class="container">
+    <div class="brand" (click)="goToHome()">
+      <mat-icon class="logo-icon">local_shipping</mat-icon>
+      <span class="brand-name">Delivereats</span>
+    </div>
+
+    <span class="spacer"></span>
+
+    @if (userRole() === "Cliente") {
+      <div class="cart-section">
+        <button mat-icon-button [matMenuTriggerFor]="cartMenu" class="cart-btn">
+          <mat-icon
+            [matBadge]="cartService.count()"
+            matBadgeColor="warn"
+            [matBadgeHidden]="cartService.count() === 0"
+          >
+            shopping_cart
+          </mat-icon>
+        </button>
+
+        <mat-menu #cartMenu="matMenu" class="cart-dropdown">
+          <div class="cart-header" (click)="$event.stopPropagation()">
+            Tu Pedido
+          </div>
+          <mat-divider></mat-divider>
+
+          <div class="cart-items-list">
+            @for (item of cartService.items(); track item.id) {
+              <div class="cart-item" (click)="$event.stopPropagation()">
+                <div class="item-info">
+                  <span class="qty">{{ item.quantity }}x</span>
+                  <span class="name">{{ item.name }}</span>
+                </div>
+                <span class="price"
+                  >Q{{ item.price * item.quantity | number: "1.2-2" }}</span
+                >
+              </div>
+            } @empty {
+              <div class="empty-cart-msg">El carrito está vacío</div>
+            }
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="cart-footer" (click)="$event.stopPropagation()">
+            <div class="total-row">
+              <span>Total:</span>
+              <strong>Q{{ cartService.total() | number: "1.2-2" }}</strong>
+            </div>
+            <button
+              mat-flat-button
+              color="primary"
+              class="w-100"
+              [disabled]="cartService.count() === 0"
+              (click)="checkout()"
+            >
+              PAGAR AHORA
+            </button>
+          </div>
+        </mat-menu>
+      </div>
+    }
+
+    @if (user()) {
+      <div class="user-section">
+        <div class="user-text">
+          <span class="name">{{ user().firstName }}</span>
+          <span class="role-badge">{{ user().role }}</span>
+        </div>
+
+        <button mat-icon-button [matMenuTriggerFor]="profileMenu">
+          <mat-icon>account_circle</mat-icon>
+        </button>
+
+        <mat-menu #profileMenu="matMenu" xPosition="before">
+          <div class="menu-header">
+            <p class="menu-email">{{ user().email }}</p>
+          </div>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon color="warn">logout</mat-icon>
+            <span>Cerrar Sesión</span>
+          </button>
+        </mat-menu>
+      </div>
+    }
+  </div>
+</mat-toolbar>

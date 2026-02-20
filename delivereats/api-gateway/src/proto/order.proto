@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package order;
+
+service OrderService {
+  // Crea la orden y devuelve el resumen con total calculado
+  rpc CreateOrder (CreateOrderRequest) returns (OrderResponse) {}
+  
+  // Obtiene una orden por su ID
+  rpc GetOrder (GetOrderRequest) returns (OrderResponse) {}
+  
+  // Historial de un usuario
+  rpc GetOrdersByUser (GetOrdersByUserRequest) returns (OrdersListResponse) {}
+  
+  // Cambiar estado (De PENDING a DELIVERED, etc.)
+  rpc UpdateOrderStatus (UpdateStatusRequest) returns (OrderResponse) {}
+}
+
+// --- MENSAJES DE ENTRADA (REQUESTS) ---
+
+message OrderItemRequest {
+  int32 menuItemId = 1;
+  int32 quantity = 2;
+  float price = 3; // El precio unitario del plato
+}
+
+message CreateOrderRequest {
+  int32 userId = 1;
+  int32 restaurantId = 2;
+  repeated OrderItemRequest items = 3; // Lista de platos
+}
+
+message GetOrderRequest {
+  int32 id = 1;
+}
+
+message GetOrdersByUserRequest {
+  int32 userId = 1;
+}
+
+message UpdateStatusRequest {
+  int32 id = 1;
+  string status = 2;
+}
+
+// --- MENSAJES DE SALIDA (RESPONSES) ---
+
+message OrderItemResponse {
+  int32 menuItemId = 1;
+  int32 quantity = 2;
+  float price = 3;
+}
+
+message OrderResponse {
+  int32 id = 1;
+  int32 userId = 2;
+  int32 restaurantId = 3;
+  float total = 4;
+  string status = 5;
+  string createdAt = 6;
+  repeated OrderItemResponse items = 7;
+}
+
+message OrdersListResponse {
+  repeated OrderResponse orders = 1;
+}

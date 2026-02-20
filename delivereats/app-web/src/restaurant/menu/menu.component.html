@@ -1,0 +1,55 @@
+<div class="menu-container">
+  <header class="menu-header">
+    <div class="back-section">
+      <button mat-icon-button routerLink="/dashboard">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>Gestión del Menú</h1>
+    </div>
+    <button mat-fab extended color="primary" (click)="openForm()">
+      <mat-icon>add</mat-icon> Agregar Plato
+    </button>
+  </header>
+
+  <div class="dishes-grid">
+    @for (dish of dishes(); track dish.id) {
+      <mat-card class="dish-card">
+        <mat-card-header>
+          <div>
+            <mat-card-title>{{ dish.name }}</mat-card-title>
+            <span class="price-chip">Q{{ dish.price | number: "1.2-2" }}</span>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content>
+          <mat-card-title>{{ "Ingredientes" }}</mat-card-title>
+          <p class="dish-description">{{ dish.description }}</p>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button
+            mat-icon-button
+            class="action-btn btn-edit"
+            (click)="openForm(dish)"
+            matTooltip="Editar plato"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            class="action-btn btn-delete"
+            (click)="deleteDish(dish.id!)"
+            matTooltip="Eliminar plato"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    } @empty {
+      <div class="empty-menu">
+        <mat-icon>no_meals</mat-icon>
+        <p>Aún no tienes platos en tu menú.</p>
+      </div>
+    }
+  </div>
+</div>

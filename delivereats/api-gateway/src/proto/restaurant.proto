@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package restaurant;
+
+service RestaurantService {
+  // --- CRUD RESTAURANTES ---
+  rpc CreateRestaurant (CreateRestaurantRequest) returns (RestaurantResponse) {}
+  rpc GetRestaurants (Empty) returns (RestaurantListResponse) {}
+  rpc GetRestaurant (GetRestaurantRequest) returns (RestaurantResponse) {} // Obtener uno solo
+  rpc UpdateRestaurant (UpdateRestaurantRequest) returns (RestaurantResponse) {}
+  rpc DeleteRestaurant (DeleteRestaurantRequest) returns (DeleteResponse) {}
+  
+  // --- CRUD MENÚ (PLATOS) ---
+  rpc CreateMenuItem (CreateMenuItemRequest) returns (MenuItemResponse) {}
+  rpc GetMenu (GetMenuRequest) returns (MenuListResponse) {}
+  rpc UpdateMenuItem (UpdateMenuItemRequest) returns (MenuItemResponse) {}
+  rpc DeleteMenuItem (DeleteMenuItemRequest) returns (DeleteResponse) {}
+}
+
+message Empty {}
+
+message DeleteResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// --- MENSAJES RESTAURANTE ---
+message CreateRestaurantRequest {
+  string name = 1;
+  string address = 2;
+  string category = 3;
+  string horario = 4;
+  string calificacion = 5;
+}
+
+message GetRestaurantRequest {
+  int32 id = 1;
+}
+
+message UpdateRestaurantRequest {
+  int32 id = 1;
+  string name = 2;
+  string address = 3;
+  string category = 4;
+  string horario = 5;
+}
+
+message DeleteRestaurantRequest {
+  int32 id = 1;
+}
+
+message RestaurantResponse {
+  int32 id = 1;
+  string name = 2;
+  string address = 3;
+  string category = 4;
+  string horario = 5;
+  string calificacion = 6;
+}
+
+message RestaurantListResponse {
+  repeated RestaurantResponse restaurants = 1;
+}
+
+// --- MENSAJES MENÚ ---
+message CreateMenuItemRequest {
+  int32 restaurantId = 1;
+  string name = 2;
+  string description = 3;
+  float price = 4;
+}
+
+message GetMenuRequest {
+  int32 restaurantId = 1;
+}
+
+message UpdateMenuItemRequest {
+  int32 id = 1;
+  string name = 2;
+  string description = 3;
+  float price = 4;
+}
+
+message DeleteMenuItemRequest {
+  int32 id = 1;
+}
+
+message MenuItemResponse {
+  int32 id = 1;
+  string name = 2;
+  string description = 3;
+  float price = 4;
+  int32 restaurantId = 5;
+}
+
+message MenuListResponse {
+  repeated MenuItemResponse items = 1;
+}

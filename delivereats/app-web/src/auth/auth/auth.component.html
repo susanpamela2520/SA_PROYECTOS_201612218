@@ -1,0 +1,63 @@
+<div class="auth-wrapper">
+  <form [formGroup]="form" (ngSubmit)="login()" class="animate-fade-in">
+    <mat-card class="auth-card" appearance="raised">
+      <div class="auth-header">
+        <div class="logo-circle">
+          <mat-icon>local_shipping</mat-icon>
+        </div>
+        <h2>¡Bienvenido de nuevo!</h2>
+        <p>Ingresa tus credenciales para continuar en Delivereats</p>
+      </div>
+
+      <mat-card-content class="fields">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Correo electrónico</mat-label>
+          <mat-icon matPrefix>email</mat-icon>
+          <input
+            matInput
+            formControlName="email"
+            placeholder="ejemplo@correo.com"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <mat-icon matPrefix>lock</mat-icon>
+          <input
+            matInput
+            formControlName="password"
+            [type]="hide() ? 'password' : 'text'"
+          />
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="clickEvent($event)"
+            [attr.aria-label]="'Ocultar contraseña'"
+          >
+            <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <div class="register-link-container">
+          <span>¿Eres nuevo?</span>
+          <a routerLink="/createAccount" class="link-text"
+            >Crea una cuenta aquí</a
+          >
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button
+          mat-flat-button
+          color="primary"
+          class="login-btn"
+          [disabled]="form.invalid"
+        >
+          INGRESAR
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div>

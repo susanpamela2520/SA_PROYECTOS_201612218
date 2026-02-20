@@ -1,0 +1,102 @@
+<app-navbar></app-navbar>
+
+<div class="dashboard-container">
+  <header class="header">
+    <div class="title-group">
+      <h1>Panel de Control</h1>
+      <p class="subtitle">Gestiona los restaurantes de la plataforma</p>
+    </div>
+
+    @if (role === "Administrador") {
+      <button
+        mat-fab
+        extended
+        color="primary"
+        (click)="openCreateDialog()"
+        class="add-btn"
+      >
+        <mat-icon>add_business</mat-icon>
+        Nuevo Restaurante
+      </button>
+    }
+  </header>
+
+  <hr class="divider" />
+
+  <div class="restaurant-grid">
+    @for (res of restaurants(); track res.id) {
+      <mat-card class="restaurant-card" appearance="raised">
+        <div class="rating-badge" *ngIf="res.calificacion">
+          <mat-icon>star</mat-icon>
+          <span>{{ res.calificacion | number: "1.1-1" }}</span>
+        </div>
+
+        <mat-card-header>
+          <div mat-card-avatar class="res-avatar">
+            {{ res.name.charAt(0).toUpperCase() }}
+          </div>
+          <mat-card-title class="res-name">{{ res.name }}</mat-card-title>
+          <mat-card-subtitle>
+            <span class="category-tag">{{ res.category }}</span>
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content class="res-body">
+          <div class="info-item">
+            <mat-icon>location_on</mat-icon>
+            <span class="text-truncate" [matTooltip]="res.address">{{
+              res.address
+            }}</span>
+          </div>
+
+          <div class="info-item schedule">
+            <mat-icon>schedule</mat-icon>
+            <span>{{
+              res.horario || res.horario || "Horario no definido"
+            }}</span>
+          </div>
+        </mat-card-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-card-actions align="end">
+          @if (role === "Administrador") {
+            <button mat-button color="accent" (click)="editRestaurant(res)">
+              <mat-icon>edit</mat-icon> Editar
+            </button>
+            <button mat-button color="warn" (click)="deleteRestaurant(res.id!)">
+              <mat-icon>delete</mat-icon> Eliminar
+            </button>
+          } @else if (role === "Vendedor" || role === "Restaurante") {
+            <button
+              mat-flat-button
+              color="primary"
+              [routerLink]="['/restaurant', res.id, 'manage-menu']"
+              class="manage-btn"
+            >
+              <mat-icon>restaurant_menu</mat-icon> Mi Menú
+            </button>
+          } @else if (role === "Cliente") {
+            <button
+              mat-flat-button
+              color="primary"
+              [routerLink]="['/order', res.id]"
+              class="order-btn"
+            >
+              <mat-icon>shopping_bag</mat-icon>
+              Ver Menú e Ir a Pedir
+            </button>
+          }
+        </mat-card-actions>
+      </mat-card>
+    } @empty {
+      <div class="empty-state">
+        <div class="empty-icon-wrapper">
+          <mat-icon>restaurant</mat-icon>
+        </div>
+        <h3>No hay restaurantes registrados</h3>
+        <p>Parece que la cocina está cerrada por ahora.</p>
+      </div>
+    }
+  </div>
+</div>

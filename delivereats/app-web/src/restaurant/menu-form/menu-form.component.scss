@@ -1,0 +1,35 @@
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 2rem;
+}
+
+.dialog-title mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: 10px;
+}
+
+/* Estilo para los iconos internos (Prefijos) */
+mat-form-field mat-icon[matPrefix] {
+  margin-right: 8px;
+  color: #3f51b5;
+}
+
+/* Responsive: que ocupe todo el ancho en móviles */
+@media (max-width: 600px) {
+  mat-dialog-content {
+    min-width: 100%;
+  }
+}

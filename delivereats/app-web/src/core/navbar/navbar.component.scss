@@ -1,0 +1,67 @@
+.main-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.brand-name {
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-text {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  margin-right: 8px;
+}
+
+.name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.role-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.25);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+  display: inline-block;
+}
+
+.menu-header {
+  padding: 16px;
+  font-size: 0.8rem;
+  color: #666;
+}

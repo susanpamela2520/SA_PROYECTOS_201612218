@@ -1,0 +1,47 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon>{{ data.item ? "edit" : "add_skillet" }}</mat-icon>
+  {{ data.item ? "Editar Plato" : "Nuevo Plato" }}
+</h2>
+<mat-dialog-content>
+  <form [formGroup]="form" class="form-container">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre del plato</mat-label>
+      <input
+        matInput
+        formControlName="name"
+        placeholder="Ej: Hamburguesa Doble"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descripción</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        placeholder="Ingredientes, tamaño..."
+      ></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Precio (Q)</mat-label>
+      <input
+        matInput
+        type="number"
+        formControlName="price"
+        placeholder="0.00"
+      />
+      <mat-icon matPrefix>payments</mat-icon>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="form.invalid"
+    (click)="onSave()"
+  >
+    Guardar Plato
+  </button>
+</mat-dialog-actions>
