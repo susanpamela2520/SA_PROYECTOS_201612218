@@ -15,6 +15,12 @@ export class OrderItem {
   @Column('decimal', { precision: 10, scale: 2 })
   price: number; // Precio al momento de comprar (snapshot)
 
+  @Column({ type: 'boolean', nullable: true })
+  isRecommended: boolean;
+
+  @Column({ nullable: true })
+  name: string;
+
   // Relación: Muchos items pertenecen a una orden
   @ManyToOne(() => Order, (order) => order.items, { onDelete: 'CASCADE' })
   order: Order;

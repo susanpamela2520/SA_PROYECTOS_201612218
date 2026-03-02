@@ -14,6 +14,12 @@ service OrderService {
   
   // Cambiar estado (De PENDING a DELIVERED, etc.)
   rpc UpdateOrderStatus (UpdateStatusRequest) returns (OrderResponse) {}
+
+  rpc GetOrdersByRestaurant (RestaurantIdRequest) returns (OrdersList);
+
+  rpc CancelOrder (OrderIdRequest) returns (OrderResponse);
+
+  rpc RateOrder (RateOrderRequest) returns (OrderResponse) {}
 }
 
 // --- MENSAJES DE ENTRADA (REQUESTS) ---
@@ -22,12 +28,14 @@ message OrderItemRequest {
   int32 menuItemId = 1;
   int32 quantity = 2;
   float price = 3; // El precio unitario del plato
+  string name = 4;
 }
 
 message CreateOrderRequest {
   int32 userId = 1;
   int32 restaurantId = 2;
   repeated OrderItemRequest items = 3; // Lista de platos
+  string restaurantName = 4;
 }
 
 message GetOrderRequest {
@@ -38,9 +46,18 @@ message GetOrdersByUserRequest {
   int32 userId = 1;
 }
 
+message RestaurantIdRequest {
+  int32 restaurantId = 1;
+}
+
+message OrdersList {
+  repeated OrderResponse orders = 1;
+}
+
 message UpdateStatusRequest {
   int32 id = 1;
   string status = 2;
+  string proofOfDelivery = 3;
 }
 
 // --- MENSAJES DE SALIDA (RESPONSES) ---
@@ -49,6 +66,8 @@ message OrderItemResponse {
   int32 menuItemId = 1;
   int32 quantity = 2;
   float price = 3;
+  bool isRecommended = 4;
+  string name = 5;
 }
 
 message OrderResponse {
@@ -59,8 +78,34 @@ message OrderResponse {
   string status = 5;
   string createdAt = 6;
   repeated OrderItemResponse items = 7;
+  string restaurantName = 8;
+  string proofOfDelivery = 9;
+  int32 rating = 10;     // <-- Agrega esto
+  string comment = 11;
+  int32 deliveryRating = 12;      
+  string deliveryComment = 13;
 }
 
 message OrdersListResponse {
   repeated OrderResponse orders = 1;
 }
+
+message OrderIdRequest {
+  int32 id = 1;
+}
+
+message ItemRatingRequest {
+  int32 menuItemId = 1;
+  bool isRecommended = 2;
+}
+
+// NUEVO MENSAJE DE PETICIÓN
+message RateOrderRequest {
+  int32 id = 1;          // ID de la orden
+  int32 rating = 2;      // Las estrellas (1 a 5)
+  string comment = 3;    // El comentario
+  int32 deliveryRating = 4;
+  string deliveryComment = 5;
+  repeated ItemRatingRequest items = 6;
+}
+
