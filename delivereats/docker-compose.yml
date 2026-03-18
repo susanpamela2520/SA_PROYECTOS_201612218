@@ -1,7 +1,8 @@
 version: "3.8"
 
 services:
-  # --- BASES DE DATOS ---
+  # --- MICROSERVICIOS ---
+
   auth-db:
     image: postgres:latest
     container_name: auth_db_container
@@ -13,7 +14,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./data/postgres:/var/lib/postgresql
+      - ./data/auth-postgres:/var/lib/postgresql
     networks:
       - delivereats-network
 
@@ -28,7 +29,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - ./data/postgres:/var/lib/postgresql
+      - ./data/restaurant-postgres:/var/lib/postgresql
     networks:
       - delivereats-network
 
@@ -43,73 +44,58 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - ./data/postgres:/var/lib/postgresql
+      - ./data/order-postgres:/var/lib/postgresql
     networks:
       - delivereats-network
 
-  # --- MICROSERVICIOS ---
-
-  auth-service:
-    build: ./auth-service
-    container_name: auth_service_container
-    ports:
-      - "3001:3001"
+  delivery-db:
+    image: postgres:latest
+    container_name: delivery_db_container
+    restart: always
     environment:
-      DATABASE_HOST: auth-db
-      DATABASE_PORT: 5432
-      DATABASE_USER: postgres
-      DATABASE_PASSWORD: 123
-      DATABASE_NAME: auth_db
-    depends_on:
-      - auth-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: delivery_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - ./data/delivery-postgres:/var/lib/postgresql
     networks:
       - delivereats-network
 
-  restaurant-service:
-    build: ./restaurant-service
-    container_name: restaurant_service_container
-    ports:
-      - "3002:3002"
+  payment-db:
+    image: postgres:latest
+    container_name: payment_db_container
+    restart: always
     environment:
-      DATABASE_HOST: restaurant-db
-      DATABASE_PORT: 5432
-      DATABASE_USER: postgres
-      DATABASE_PASSWORD: 123
-      DATABASE_NAME: restaurant_db
-    depends_on:
-      - restaurant-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: payment_db
+    ports:
+      - "5436:5432"
+    volumes:
+      - ./data/payment-postgres:/var/lib/postgresql
     networks:
       - delivereats-network
 
-  order-service:
-    build: ./order-service
-    container_name: order_service_container
+  fx-db:
+    image: redis:alpine
+    container_name: fx_db_container
+    restart: always
     ports:
-      - "3003:3003"
-    environment:
-      DATABASE_HOST: order-db
-      DATABASE_PORT: 5432
-      DATABASE_USER: postgres
-      DATABASE_PASSWORD: 123
-      DATABASE_NAME: order_db
-    depends_on:
-      - order-db
+      - "6379:6379"
     networks:
       - delivereats-network
 
-  api-gateway:
-    build: ./api-gateway
-    container_name: api_gateway_container
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
     ports:
-      - "3000:3000"
+      - "5672:5672" # Puerto para que los microservicios se conecten
+      - "15672:15672" # Puerto para ver el Dashboard en el navegador
     environment:
-      AUTH_SERVICE_HOST: auth-service
-      RESTAURANT_SERVICE_HOST: restaurant-service
-      ORDER_SERVICE_HOST: order-service
-    depends_on:
-      - auth-service
-      - restaurant-service
-      - order-service
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     networks:
       - delivereats-network
 
