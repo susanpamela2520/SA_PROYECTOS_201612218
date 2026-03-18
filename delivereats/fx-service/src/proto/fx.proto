@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package fx;
+
+// Servicio encargado de las conversiones de divisas
+service FxService {
+  // Obtiene solo la tasa de cambio actual entre dos monedas
+  rpc GetExchangeRate (ExchangeRateRequest) returns (ExchangeRateResponse) {}
+  
+  // Convierte un monto específico de una moneda a otra
+  rpc ConvertCurrency (ConvertRequest) returns (ConvertResponse) {}
+}
+
+// Mensajes para GetExchangeRate
+message ExchangeRateRequest {
+  string base_currency = 1;   // Ej. "GTQ"
+  string target_currency = 2; // Ej. "USD", "MXN", "JPY"
+}
+
+message ExchangeRateResponse {
+  bool success = 1;
+  string base_currency = 2;
+  string target_currency = 3;
+  double rate = 4;            // Ej. 0.13 (Tasa de GTQ a USD)
+  string last_updated = 5;    // Útil para saber si vino de caché o de la API
+}
+
+// Mensajes para ConvertCurrency
+message ConvertRequest {
+  string base_currency = 1;
+  string target_currency = 2;
+  double amount = 3;          // El total de la orden en Quetzales
+}
+
+message ConvertResponse {
+  bool success = 1;
+  double original_amount = 2;
+  double converted_amount = 3; // El monto ya convertido a la moneda destino
+  double rate = 4;
+}
