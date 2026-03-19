@@ -1,0 +1,88 @@
+<div class="wallet-container">
+  <div class="header">
+    <button mat-icon-button routerLink="/dashboard">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Mi Billetera Digital</h1>
+  </div>
+
+  <div class="wallet-content">
+    <div class="balance-section">
+      <div class="credit-card">
+        <div class="card-chip">
+          <mat-icon>memory</mat-icon>
+        </div>
+        <div class="card-balance">
+          <p class="label">Saldo Disponible</p>
+          <h2>Q {{ balance() | number: "1.2-2" }}</h2>
+        </div>
+        <div class="card-footer">
+          <span>DeliverEats Pay</span>
+          <mat-icon>contactless</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <div class="recharge-section">
+      <mat-card class="recharge-card shadow-sm">
+        <h3>Recargar Saldo</h3>
+
+        <div class="form-grid">
+          <div class="input-group full-width">
+            <label>Monto a recargar (Q)</label>
+            <input
+              type="number"
+              [(ngModel)]="rechargeData.amount"
+              placeholder="Ej. 150.00"
+              class="custom-input"
+            />
+          </div>
+
+          <div class="input-group full-width">
+            <label>Número de Tarjeta</label>
+            <input
+              type="text"
+              [(ngModel)]="rechargeData.cardNumber"
+              placeholder="xxxx-xxxx-xxxx-xxxx"
+              class="custom-input"
+            />
+            <!-- <small class="hint"
+              >*Tip: Si termina en "0000" será rechazada simulando error.</small
+            > -->
+          </div>
+
+          <div class="input-group half-width">
+            <label>Expiración</label>
+            <input
+              type="text"
+              [(ngModel)]="rechargeData.expiryDate"
+              placeholder="MM/YY"
+              class="custom-input"
+            />
+          </div>
+
+          <div class="input-group half-width">
+            <label>CVV</label>
+            <input
+              type="password"
+              [(ngModel)]="rechargeData.cvv"
+              placeholder="123"
+              class="custom-input"
+              maxlength="4"
+            />
+          </div>
+        </div>
+
+        <button
+          mat-flat-button
+          color="primary"
+          class="recharge-btn"
+          (click)="recharge()"
+        >
+          <mat-icon>payment</mat-icon>
+          Procesar Recarga
+        </button>
+      </mat-card>
+    </div>
+  </div>
+</div>

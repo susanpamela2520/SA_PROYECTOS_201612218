@@ -7,58 +7,23 @@
 
     <span class="spacer"></span>
 
-    @if (userRole() === "Cliente") {
+    @if (role === "Cliente") {
       <div class="cart-section">
-        <button mat-icon-button [matMenuTriggerFor]="cartMenu" class="cart-btn">
+        <button mat-icon-button routerLink="/cart">
           <mat-icon
-            [matBadge]="cartService.count()"
+            [matBadge]="cartService.totalItems()"
             matBadgeColor="warn"
-            [matBadgeHidden]="cartService.count() === 0"
+            [matBadgeHidden]="cartService.totalItems() === 0"
           >
             shopping_cart
           </mat-icon>
         </button>
-
-        <mat-menu #cartMenu="matMenu" class="cart-dropdown">
-          <div class="cart-header" (click)="$event.stopPropagation()">
-            Tu Pedido
-          </div>
-          <mat-divider></mat-divider>
-
-          <div class="cart-items-list">
-            @for (item of cartService.items(); track item.id) {
-              <div class="cart-item" (click)="$event.stopPropagation()">
-                <div class="item-info">
-                  <span class="qty">{{ item.quantity }}x</span>
-                  <span class="name">{{ item.name }}</span>
-                </div>
-                <span class="price"
-                  >Q{{ item.price * item.quantity | number: "1.2-2" }}</span
-                >
-              </div>
-            } @empty {
-              <div class="empty-cart-msg">El carrito está vacío</div>
-            }
-          </div>
-
-          <mat-divider></mat-divider>
-
-          <div class="cart-footer" (click)="$event.stopPropagation()">
-            <div class="total-row">
-              <span>Total:</span>
-              <strong>Q{{ cartService.total() | number: "1.2-2" }}</strong>
-            </div>
-            <button
-              mat-flat-button
-              color="primary"
-              class="w-100"
-              [disabled]="cartService.count() === 0"
-              (click)="checkout()"
-            >
-              PAGAR AHORA
-            </button>
-          </div>
-        </mat-menu>
+        <button mat-icon-button routerLink="/my-orders" class="action-btn">
+          <mat-icon matBadgeColor="warn">assignment</mat-icon>
+        </button>
+        <button mat-icon-button routerLink="/wallet" class="action-btn">
+          <mat-icon matBadgeColor="warn">payments</mat-icon>
+        </button>
       </div>
     }
 

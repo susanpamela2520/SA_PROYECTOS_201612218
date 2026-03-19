@@ -5,6 +5,8 @@ export interface Restaurant {
   category: string;
   horario: string;
   calificacion?: string;
+  rating?: number;
+  ratingCount?: number;
 }
 
 export interface RestaurantResponse {

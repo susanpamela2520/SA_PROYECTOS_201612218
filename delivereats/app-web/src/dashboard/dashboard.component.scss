@@ -206,3 +206,10 @@ mat-card-actions {
     grid-template-columns: 1fr;
   }
 }
+
+.reviews-count {
+  font-size: 0.8rem;
+  color: #555; /* Un gris un poco más oscuro para contrastar con el fondo del badge */
+  margin-left: 4px;
+  font-weight: normal;
+}

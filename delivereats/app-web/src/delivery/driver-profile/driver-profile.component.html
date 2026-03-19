@@ -1,0 +1,58 @@
+<div class="profile-container">
+  <header class="header">
+    <button mat-icon-button routerLink="/dashboard">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="title-group">
+      <h1>Mi Desempeño</h1>
+      <p class="subtitle">Resumen de tus calificaciones y comentarios</p>
+    </div>
+  </header>
+
+  <mat-card class="stats-card shadow-sm">
+    <div class="stats-content">
+      <div class="rating-circle">
+        <h2>{{ averageRating() | number: "1.1-1" }}</h2>
+        <mat-icon class="star-icon">star</mat-icon>
+      </div>
+      <div class="stats-text">
+        <h3>Promedio General</h3>
+        <p>Basado en {{ totalReviews() }} calificaciones de clientes</p>
+      </div>
+    </div>
+  </mat-card>
+
+  <h2 class="section-title">Comentarios Recientes</h2>
+
+  <div class="comments-list">
+    @for (delivery of ratedDeliveries(); track delivery.id) {
+      <mat-card class="comment-card shadow-sm">
+        <div class="comment-header">
+          <span class="restaurant-name"
+            >Entregado de: {{ delivery.restaurantName }}</span
+          >
+          <span class="date">{{
+            delivery.startTime | date: "mediumDate"
+          }}</span>
+        </div>
+
+        <div class="stars readonly">
+          @for (star of [1, 2, 3, 4, 5]; track star) {
+            <mat-icon [class.active]="star <= delivery.rating">star</mat-icon>
+          }
+        </div>
+
+        @if (delivery.comment) {
+          <p class="comment-text">"{{ delivery.comment }}"</p>
+        } @else {
+          <p class="no-comment-text">El cliente no dejó comentario escrito.</p>
+        }
+      </mat-card>
+    } @empty {
+      <div class="empty-state">
+        <mat-icon>sentiment_satisfied</mat-icon>
+        <p>Aún no tienes calificaciones. ¡Sigue entregando con excelencia!</p>
+      </div>
+    }
+  </div>
+</div>

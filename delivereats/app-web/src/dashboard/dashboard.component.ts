@@ -40,7 +40,6 @@ export class DashboardComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'category', 'address', 'actions'];
 
   ngOnInit(): void {
-    console.log('avve ', this.authService.userRole());
     this.loadRestaurants();
   }
 

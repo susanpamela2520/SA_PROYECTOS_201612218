@@ -5,28 +5,31 @@ import { MenuItem } from '../restaurant/intefaces/menu.interface';
   providedIn: 'root',
 })
 export class CartService {
-  // Signal privado con la lista de productos
+  // 1. El Signal que guarda la lista de platos
   private cartItems = signal<CartItem[]>([]);
 
-  // Signals computados (se actualizan solos)
-  items = computed(() => this.cartItems());
+  // 2. Signals computados (se actualizan solos cuando cambia cartItems)
+  public items = computed(() => this.cartItems());
 
-  count = computed(() =>
+  public totalItems = computed(() =>
     this.cartItems().reduce((acc, item) => acc + item.quantity, 0),
   );
 
-  total = computed(() =>
+  public totalPrice = computed(() =>
     this.cartItems().reduce((acc, item) => acc + item.price * item.quantity, 0),
   );
 
+  // 3. Método para agregar un plato
   addToCart(product: MenuItem) {
     const currentItems = this.cartItems();
-    const existingItem = currentItems.find((i) => i.id === product.id);
+    const existingItem = currentItems.find((item) => item.id === product.id);
 
     if (existingItem) {
       this.cartItems.set(
-        currentItems.map((i) =>
-          i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i,
+        currentItems.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item,
         ),
       );
     } else {
@@ -34,10 +37,26 @@ export class CartService {
     }
   }
 
+  // 4. Quitar un producto completamente
   removeItem(productId: number) {
-    this.cartItems.set(this.cartItems().filter((i) => i.id !== productId));
+    this.cartItems.set(
+      this.cartItems().filter((item) => item.id !== productId),
+    );
   }
 
+  updateQuantity(productId: number, delta: number) {
+    this.cartItems.update((items) =>
+      items.map((item) => {
+        if (item.id === productId) {
+          const newQty = item.quantity + delta;
+          return { ...item, quantity: newQty > 0 ? newQty : 1 };
+        }
+        return item;
+      }),
+    );
+  }
+
+  // 5. Vaciar todo el carrito
   clearCart() {
     this.cartItems.set([]);
   }

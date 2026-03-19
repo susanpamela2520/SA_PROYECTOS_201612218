@@ -1,0 +1,117 @@
+<div class="cart-page-container">
+  <header class="cart-header">
+    <button mat-icon-button routerLink="/dashboard">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Tu Carrito de Compras</h1>
+  </header>
+
+  <div class="cart-content">
+    <div class="items-list">
+      @for (item of cartService.items(); track item.id) {
+        <mat-card class="item-card" appearance="outlined">
+          <div class="item-info">
+            <h3>{{ item.name }}</h3>
+            <p class="unit-price">
+              Precio unitario: Q{{ item.price | number: "1.2-2" }}
+            </p>
+          </div>
+
+          <div class="item-actions">
+            <div class="qty-selector">
+              <span><strong>Cant:</strong></span>
+              <button
+                mat-icon-button
+                (click)="cartService.updateQuantity(item.id!, -1)"
+              >
+                <mat-icon>remove_circle_outline</mat-icon>
+              </button>
+              <span class="qty-number">{{ item.quantity }}</span>
+              <button
+                mat-icon-button
+                (click)="cartService.updateQuantity(item.id!, 1)"
+              >
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+            </div>
+            <div class="subtotal">
+              Q{{ item.price * item.quantity | number: "1.2-2" }}
+            </div>
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="cartService.removeItem(item.id!)"
+            >
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </mat-card>
+      } @empty {
+        <div class="empty-cart">
+          <mat-icon>shopping_basket</mat-icon>
+          <p>Tu carrito está vacío, ¡ve por algo rico!</p>
+          <button mat-raised-button color="primary" routerLink="/dashboard">
+            Ver Restaurantes
+          </button>
+        </div>
+      }
+    </div>
+
+    @if (cartService.totalItems() > 0) {
+      <mat-card class="summary-card" appearance="raised">
+        <h2>Resumen del Pedido</h2>
+        <div class="summary-row">
+          <span>Subtotal ({{ cartService.totalItems() }} productos)</span>
+          <span>Q{{ cartService.totalPrice() | number: "1.2-2" }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Envío</span>
+          <span class="free-text">¡GRATIS!</span>
+        </div>
+
+        <mat-form-field
+          appearance="outline"
+          style="width: 100%; margin-top: 15px"
+        >
+          <mat-label>Mostrar moneda en</mat-label>
+          <mat-select
+            [value]="selectedCurrency()"
+            (selectionChange)="onCurrencyChange($event)"
+          >
+            <mat-option value="GTQ">Quetzales (GTQ)</mat-option>
+            <mat-option value="USD">Dólares Estadounidenses (USD)</mat-option>
+            <mat-option value="MXN">Pesos Mexicanos (MXN)</mat-option>
+            <mat-option value="EUR">Euros (EUR)</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-divider></mat-divider>
+        <div class="summary-row total">
+          <span>Total a Pagar</span>
+          <div style="text-align: right; display: flex; flex-direction: column">
+            <span>Q{{ cartService.totalPrice() | number: "1.2-2" }}</span>
+
+            @if (selectedCurrency() !== "GTQ" && convertedTotal()) {
+              <span style="font-size: 1.1rem; color: #666; font-weight: normal">
+                ≈ {{ convertedTotal() | number: "1.2-2" }}
+                {{ selectedCurrency() }}
+              </span>
+            }
+
+            @if (isConverting()) {
+              <span style="font-size: 0.8rem; color: #888">Calculando...</span>
+            }
+          </div>
+        </div>
+        <button
+          mat-flat-button
+          color="primary"
+          class="checkout-btn"
+          (click)="confirmOrder()"
+        >
+          CONFIRMAR PEDIDO
+        </button>
+      </mat-card>
+    }
+  </div>
+</div>

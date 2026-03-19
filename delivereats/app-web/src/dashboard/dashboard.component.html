@@ -18,6 +18,27 @@
         <mat-icon>add_business</mat-icon>
         Nuevo Restaurante
       </button>
+    } @else if (role === "Repartidor") {
+      <button
+        mat-fab
+        extended
+        color="accent"
+        routerLink="/deliveries"
+        class="delivery-history-btn"
+      >
+        <mat-icon>local_shipping</mat-icon>
+        Mis Entregas Activas
+      </button>
+      <button
+        mat-fab
+        extended
+        color="primary"
+        routerLink="/driver-profile"
+        style="margin-left: 15px"
+      >
+        <mat-icon>star</mat-icon>
+        Mi Desempeño
+      </button>
     }
   </header>
 
@@ -26,9 +47,14 @@
   <div class="restaurant-grid">
     @for (res of restaurants(); track res.id) {
       <mat-card class="restaurant-card" appearance="raised">
-        <div class="rating-badge" *ngIf="res.calificacion">
+        <div class="rating-badge">
           <mat-icon>star</mat-icon>
-          <span>{{ res.calificacion | number: "1.1-1" }}</span>
+          @if (res.rating && res.rating > 0) {
+            <span>{{ res.rating | number: "1.1-1" }}</span>
+            <span class="reviews-count">({{ res.ratingCount }})</span>
+          } @else {
+            <span>Nuevo</span>
+          }
         </div>
 
         <mat-card-header>
@@ -76,6 +102,15 @@
             >
               <mat-icon>restaurant_menu</mat-icon> Mi Menú
             </button>
+
+            <button
+              mat-flat-button
+              color="accent"
+              [routerLink]="['/manage-orders', res.id]"
+              class="action-btn"
+            >
+              <mat-icon>assignment</mat-icon> Ver Pedidos
+            </button>
           } @else if (role === "Cliente") {
             <button
               mat-flat-button
@@ -85,6 +120,16 @@
             >
               <mat-icon>shopping_bag</mat-icon>
               Ver Menú e Ir a Pedir
+            </button>
+          } @else if (role === "Repartidor") {
+            <button
+              mat-flat-button
+              color="primary"
+              [routerLink]="['/delivery-tasks', res.id]"
+              class="delivery-action-btn"
+            >
+              <mat-icon>takeout_dining</mat-icon>
+              Recoger Pedidos
             </button>
           }
         </mat-card-actions>

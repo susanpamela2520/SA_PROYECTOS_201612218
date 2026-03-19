@@ -1,0 +1,220 @@
+<div class="orders-container">
+  <header class="header">
+    <button mat-icon-button routerLink="/dashboard">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Mis Pedidos</h1>
+  </header>
+
+  <div class="orders-list">
+    @for (order of orders(); track order.id) {
+      <mat-card class="order-card shadow-sm">
+        <div class="card-content">
+          <div class="info-section">
+            <div class="restaurant-info">
+              <mat-icon color="primary">restaurant</mat-icon>
+              <div>
+                <h2 class="res-name">{{ order.restaurantName }}</h2>
+                <span class="order-id">Orden #{{ order.id }}</span>
+              </div>
+            </div>
+
+            <div class="meta-data">
+              <span class="date">
+                {{ order.createdAt | date: "mediumDate" }} •
+                {{ order.createdAt | date: "shortTime" }}
+              </span>
+              <div class="items-preview">
+                {{ order.items?.length || 0 }} productos •
+                <strong>Q{{ order.total | number: "1.2-2" }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="status-section">
+            @if (order.status === "Entregado") {
+              <div class="success-header">
+                <mat-icon>check_circle</mat-icon>
+                <span [ngClass]="getStatusClass(order.status)"
+                  >Pedido Entregado</span
+                >
+              </div>
+            } @else {
+              <span
+                class="status-badge"
+                [ngClass]="getStatusClass(order.status)"
+              >
+                {{ order.status }}
+              </span>
+            }
+
+            <div class="actions">
+              @if (order.status === "Pendiente") {
+                <button
+                  mat-stroked-button
+                  color="warn"
+                  (click)="cancel(order.id)"
+                >
+                  Cancelar
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+
+        @if (order.status === "Entregado") {
+          <div class="delivery-proof-section">
+            @if (order.proofOfDelivery) {
+              <div class="proof-image-container">
+                <p class="proof-label">Comprobante de entrega:</p>
+                <img
+                  [src]="order.proofOfDelivery"
+                  alt="Comprobante"
+                  class="proof-img"
+                />
+              </div>
+            } @else {
+              <div class="no-proof">
+                <small>Entregado sin comprobante visual.</small>
+              </div>
+            }
+          </div>
+
+          <div class="rating-container">
+            @if (order.rating) {
+              <div class="already-rated-grid">
+                <div class="rated-block">
+                  <p class="rated-title">🍔 Restaurante:</p>
+                  <div class="stars readonly">
+                    @for (star of [1, 2, 3, 4, 5]; track star) {
+                      <mat-icon [class.active]="star <= order.rating"
+                        >star</mat-icon
+                      >
+                    }
+                  </div>
+                  @if (order.comment) {
+                    <p class="user-comment">"{{ order.comment }}"</p>
+                  }
+                </div>
+
+                <div class="rated-block">
+                  <p class="rated-title">🏍️ Repartidor:</p>
+                  <div class="stars readonly">
+                    @for (star of [1, 2, 3, 4, 5]; track star) {
+                      <mat-icon [class.active]="star <= order.deliveryRating"
+                        >star</mat-icon
+                      >
+                    }
+                  </div>
+                  @if (order.deliveryComment) {
+                    <p class="user-comment">"{{ order.deliveryComment }}"</p>
+                  }
+                </div>
+              </div>
+            } @else {
+              <div class="rate-now">
+                <h3 class="main-rating-title">¡Califica tu experiencia!</h3>
+
+                <div class="rating-section">
+                  <p>¿Qué te pareció la comida?</p>
+                  <div class="stars interactive">
+                    @for (star of [1, 2, 3, 4, 5]; track star) {
+                      <mat-icon
+                        (click)="setRating(order.id, star)"
+                        [class.active]="star <= (currentRatings[order.id] || 0)"
+                        >star</mat-icon
+                      >
+                    }
+                  </div>
+                  <textarea
+                    #resComment
+                    placeholder="Comentario para el restaurante (Opcional)"
+                    rows="2"
+                  ></textarea>
+                </div>
+
+                <div class="rating-section">
+                  <p>¿Cómo estuvo la entrega?</p>
+                  <div class="stars interactive">
+                    @for (star of [1, 2, 3, 4, 5]; track star) {
+                      <mat-icon
+                        (click)="setDeliveryRating(order.id, star)"
+                        [class.active]="
+                          star <= (deliveryRatings[order.id] || 0)
+                        "
+                        >star</mat-icon
+                      >
+                    }
+                  </div>
+                  <textarea
+                    #delComment
+                    placeholder="Comentario para el repartidor (Opcional)"
+                    rows="2"
+                  ></textarea>
+                </div>
+
+                <div class="rating-section items-rating-section">
+                  <p>🍽️ Recomienda tus platillos:</p>
+                  <div class="items-list">
+                    @for (item of order.items; track item.menuItemId) {
+                      <div class="item-row">
+                        <span class="item-name">{{
+                          item.name || "Platillo (ID: " + item.menuItemId + ")"
+                        }}</span>
+                        <div class="thumbs-actions">
+                          <button
+                            mat-icon-button
+                            class="thumb-btn"
+                            [class.active-up]="
+                              itemRatings[order.id]?.[item.menuItemId] === true
+                            "
+                            (click)="
+                              setItemRating(order.id, item.menuItemId, true)
+                            "
+                          >
+                            <mat-icon>thumb_up</mat-icon>
+                          </button>
+                          <button
+                            mat-icon-button
+                            class="thumb-btn"
+                            [class.active-down]="
+                              itemRatings[order.id]?.[item.menuItemId] === false
+                            "
+                            (click)="
+                              setItemRating(order.id, item.menuItemId, false)
+                            "
+                          >
+                            <mat-icon>thumb_down</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+
+                <button
+                  mat-flat-button
+                  color="accent"
+                  class="submit-mega-btn"
+                  (click)="
+                    submitRating(order, resComment.value, delComment.value)
+                  "
+                >
+                  Enviar Calificación Completa
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </mat-card>
+    } @empty {
+      <div class="empty-state">
+        <mat-icon>fastfood</mat-icon>
+        <p>No tienes pedidos recientes.</p>
+        <button mat-flat-button color="primary" routerLink="/dashboard">
+          Ir a pedir comida
+        </button>
+      </div>
+    }
+  </div>
+</div>

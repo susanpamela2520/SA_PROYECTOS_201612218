@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { AuthService } from '../../auth/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { CartService } from '../../order/cart.service';
@@ -9,7 +9,13 @@ import { MatBadgeModule } from '@angular/material/badge';
 
 @Component({
   selector: 'app-navbar',
-  imports: [SharedModule, MatMenuModule, MatToolbarModule, MatBadgeModule],
+  imports: [
+    SharedModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatBadgeModule,
+    RouterLink,
+  ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
   standalone: true,
@@ -27,6 +33,7 @@ export class NavbarComponent {
     // Obtenemos los datos del token al iniciar
     const data = this.authService.getUserData();
     this.user.set(data);
+    console.log('siuuuu ', this.role);
   }
 
   logout(): void {
@@ -43,5 +50,9 @@ export class NavbarComponent {
   checkout(): void {
     console.log('Procesando pedido:', this.cartService.items());
     this.router.navigate(['/checkout']);
+  }
+
+  get role() {
+    return this.authService.userRole();
   }
 }

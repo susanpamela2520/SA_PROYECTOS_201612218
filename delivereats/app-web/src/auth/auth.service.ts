@@ -15,7 +15,7 @@ import { jwtDecode } from 'jwt-decode';
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private apiUrl = 'http://api-gateway:3000/auth';
+  private apiUrl = 'http://localhost:3000/auth';
 
   currentUser = signal<any>(null);
 

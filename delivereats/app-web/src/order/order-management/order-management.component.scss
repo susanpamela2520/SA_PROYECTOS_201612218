@@ -1,0 +1,128 @@
+.management-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #f8f9fa; /* Fondo gris claro pro */
+  min-height: 100vh;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Diseño de la Tarjeta */
+.order-card {
+  border-radius: 16px !important;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  padding: 1.5rem !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.order-id {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* Badges de estado con colores */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.status-pendiente {
+  background-color: #fff3e0;
+  color: #ef6c00;
+}
+.status-preparando {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+.status-enviado {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.order-items {
+  flex-grow: 1;
+  margin-bottom: 1rem;
+}
+
+.item-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.item-qty {
+  font-weight: 700;
+  color: #555;
+}
+
+.order-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.order-total {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 1.2rem !important;
+  font-weight: 700 !important;
+  border-radius: 12px !important;
+
+  &.warn {
+    background: #b40900;
+  }
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem;
+  color: #999;
+}
+.empty-state mat-icon {
+  font-size: 4rem;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1rem;
+}

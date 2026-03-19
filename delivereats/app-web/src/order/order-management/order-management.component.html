@@ -1,0 +1,84 @@
+<div class="management-page">
+  <header class="page-header">
+    <button mat-icon-button routerLink="/dashboard">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Gestión de Pedidos Entrantes</h1>
+  </header>
+
+  <div class="orders-grid">
+    @for (order of orders(); track order.id) {
+      <mat-card class="order-card shadow-sm">
+        <div class="card-header">
+          <h2 class="order-id">Orden #{{ order.id }}</h2>
+          <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+            {{ order.status }}
+          </span>
+        </div>
+
+        <mat-card-content class="order-items">
+          @for (item of order.items; track item.id) {
+            <div class="item-row">
+              <span class="item-qty">{{ item.quantity }}x</span>
+              <span class="item-name">{{ item.productName }}</span>
+            </div>
+          } @empty {
+            <p class="no-items">Sin detalle de productos.</p>
+          }
+        </mat-card-content>
+
+        <div class="order-summary">
+          <p class="order-time">{{ order.createdAt | date: "shortTime" }}</p>
+          <p class="order-total">
+            Total: <strong>Q{{ order.total | number: "1.2-2" }}</strong>
+          </p>
+        </div>
+
+        <div class="card-actions">
+          @if (order.status === "Pagado") {
+            <button
+              mat-flat-button
+              color="primary"
+              class="action-btn"
+              (click)="changeStatus(order.id, 'Preparando')"
+            >
+              Preparando
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              class="action-btn warn mt-4"
+              (click)="cancel(order.id)"
+            >
+              RECHAZAR / CANCELAR
+            </button>
+          } @else if (order.status === "Preparando") {
+            <button
+              mat-flat-button
+              color="accent"
+              class="action-btn"
+              (click)="changeStatus(order.id, 'Enviado')"
+            >
+              MARCAR COMO Enviado
+            </button>
+          } @else {
+            @if (order.status === "Cancelada") {
+              <button mat-stroked-button disabled class="action-btn">
+                Pedido Cancelado
+              </button>
+            } @else {
+              <button mat-stroked-button disabled class="action-btn">
+                PEDIDO FINALIZADO
+              </button>
+            }
+          }
+        </div>
+      </mat-card>
+    } @empty {
+      <div class="empty-state">
+        <mat-icon>assignment_turned_in</mat-icon>
+        <p>No hay pedidos pendientes en este momento.</p>
+      </div>
+    }
+  </div>
+</div>

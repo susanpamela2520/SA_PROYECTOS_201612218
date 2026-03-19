@@ -20,6 +20,7 @@ export class OrderViewComponent {
   menu = signal<MenuItem[]>([]);
   private cartService = inject(CartService);
   private snackBar = inject(MatSnackBar);
+  private restaurantName: string = '';
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -27,12 +28,17 @@ export class OrderViewComponent {
       this.restaurantService.getMenu(Number(id)).subscribe((res: any) => {
         this.menu.set(res.items);
       });
+
+      this.restaurantService.getRestaurant(Number(id)).subscribe((res: any) => {
+        this.restaurantName = res.name;
+      });
     }
   }
 
   addToCart(item: MenuItem) {
+    item.restaurantName = this.restaurantName;
     this.cartService.addToCart(item);
-    this.snackBar.open(`${item.name} agregado al carrito`, 'Cerrar', {
+    this.snackBar.open(`${item.name} agregado al pedido`, 'Cerrar', {
       duration: 2000,
       horizontalPosition: 'right',
     });
