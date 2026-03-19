@@ -109,4 +109,12 @@ export class AppController implements OnModuleInit {
       user: req.user, // Aquí vendrá el ID y el ROL
     };
   }
+
+  @Get('hello')
+  getHealth() {
+    return {
+      status: 'ok',
+      service: 'api-gateway funcionando',
+    };
+  }
 }

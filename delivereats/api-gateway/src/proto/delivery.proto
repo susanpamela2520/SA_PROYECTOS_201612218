@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package delivery;
+
+service DeliveryService {
+  // El repartidor acepta el pedido
+  rpc AcceptOrder (AcceptOrderRequest) returns (DeliveryResponse);
+  
+  // El repartidor marca como ENTREGADO o CANCELADO
+  rpc UpdateDeliveryStatus (UpdateStatusRequest) returns (DeliveryResponse);
+  
+  // Ver historial de entregas de un repartidor
+  rpc GetDeliveriesByDriver (DriverIdRequest) returns (DeliveryList);
+
+  rpc HealthCheck (Empty) returns (HealthResponse);
+}
+
+message AcceptOrderRequest {
+  int32 orderId = 1;
+  int32 driverId = 2; // ID del repartidor (userId)
+}
+
+message UpdateStatusRequest {
+  int32 deliveryId = 1;
+  string status = 2; // ENTREGADO, CANCELADO
+  string proofOfDelivery = 3;
+}
+
+message DriverIdRequest {
+  int32 driverId = 1;
+}
+
+message DeliveryResponse {
+  int32 id = 1;
+  int32 orderId = 2;
+  int32 driverId = 3;
+  string status = 4;
+  string proofOfDelivery = 5;
+  string restaurantName = 6;
+  float total = 7;
+  int32 rating = 8;     
+  string comment = 9;
+}
+
+message DeliveryList {
+  repeated DeliveryResponse deliveries = 1;
+}
+
+message Empty {}
+
+message HealthResponse {
+  string message = 1;
+}

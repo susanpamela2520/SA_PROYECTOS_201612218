@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package payment;
+
+service PaymentService {
+  rpc RechargeWallet (RechargeRequest) returns (PaymentResponse) {}
+  rpc ProcessOrderPayment (PayOrderRequest) returns (PaymentResponse) {}
+  rpc GetWallet (GetWalletRequest) returns (WalletResponse) {}
+}
+
+message RechargeRequest {
+  int32 userId = 1;
+  float amount = 2;
+  string cardNumber = 3;
+  string cvv = 4;
+  string expiryDate = 5;
+}
+
+message PayOrderRequest {
+  int32 userId = 1;
+  int32 orderId = 2;
+  float amount = 3;
+}
+
+message GetWalletRequest {
+  int32 userId = 1;
+}
+
+message WalletResponse {
+  int32 userId = 1;
+  float balance = 2;
+}
+
+message PaymentResponse {
+  bool success = 1;
+  string message = 2;
+  float newBalance = 3;
+}
