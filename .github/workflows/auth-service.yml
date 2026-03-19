@@ -26,6 +26,7 @@ jobs:
           cd delivereats/auth-service
           npm ci
 
+
       - name: 4. Ejecutar Tests Unitarios (Falla si < 70% cobertura)
         run: |
           cd delivereats/auth-service
