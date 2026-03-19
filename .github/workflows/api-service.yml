@@ -45,7 +45,7 @@ jobs:
           context: ./delivereats/api-gateway
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/api-gateway:latest
-
+      
       # --- PASO A KUBERNETES ---
 
       - name: 7. Despliegue en Kubernetes
