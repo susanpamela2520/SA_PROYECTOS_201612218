@@ -79,6 +79,7 @@
       "!src/**/*.dto.ts",
       "!src/**/*.entity.ts",
       "!src/**/*.proto"
+      
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
