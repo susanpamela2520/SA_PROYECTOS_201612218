@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "delivereats/order-service/**" # Solo se activa si hay cambios en el servicio de Auth
+      - "delivereats/order-service/**"
 
 jobs:
   ci-cd-pipeline:
@@ -44,11 +44,31 @@ jobs:
         with:
           context: ./delivereats/order-service
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/order-service:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/order-service:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/order-service:${{ github.sha }}
 
       # --- PASO A KUBERNETES ---
 
-      - name: 7. Despliegue en Kubernetes
+      - name: 7. Autenticación en Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: 8. Obtener credenciales del clúster GKE
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
+          location: ${{ secrets.GKE_ZONE }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: 9. Desplegar manifiestos en Kubernetes
         run: |
-          echo "Desplegando en el clúster..."
-          # Aquí usaremos kubectl o helm más adelante cuando configures tu K8s
+          # Actualizamos la imagen en el deployment
+          sed -i "s|image: .*order-service:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/order-service:${{ github.sha }}|g" k8s/order/order-deployment.yaml
+
+          # Aplicar en orden correcto
+          kubectl apply -f k8s/order/order-configmap.yaml
+          kubectl apply -f k8s/order/order-secret.yaml
+          kubectl apply -f k8s/order/order-db.yaml
+          kubectl apply -f k8s/order/order-deployment.yaml

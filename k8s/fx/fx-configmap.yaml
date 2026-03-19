@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fx-service-config
+  namespace: sa
+data:
+  # Base de Datos
+  DB_HOST_FX: "fx-redis-service"
+  DB_PORT: "6379"
+  CACHE_TTL: "43200"
+  # Aplicación
+  PORT: "50056"

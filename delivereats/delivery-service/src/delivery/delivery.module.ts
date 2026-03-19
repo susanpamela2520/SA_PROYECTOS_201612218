@@ -17,7 +17,7 @@ import { Delivery } from './entities/delivery.entity';
         options: {
           package: 'order', // Debe coincidir con tu order.proto
           protoPath: join(__dirname, '../proto/order.proto'),
-          url: 'localhost:50053', // Nombre del contenedor de órdenes en Docker
+          url: process.env.ORDER_SERVICE_URL || 'order-service:50053', // Nombre del contenedor de órdenes en Docker
         },
       },
     ]),

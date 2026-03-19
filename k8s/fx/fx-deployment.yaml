@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fx-service
+  namespace: sa
+  labels:
+    app: fx-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fx-service
+  template:
+    metadata:
+      labels:
+        app: fx-service
+    spec:
+      containers:
+        - name: fx-container
+          image: pampam4188/fx-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 50056
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
+          readinessProbe:
+            tcpSocket:
+              port: 50056
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 50056
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: fx-service-config
+                  key: PORT
+            - name: DB_HOST_FX
+              valueFrom:
+                configMapKeyRef:
+                  name: fx-service-config
+                  key: DB_HOST_FX
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: fx-service-config
+                  key: DB_PORT
+            - name: CACHE_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: fx-service-config
+                  key: CACHE_TTL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fx-service
+  namespace: sa
+spec:
+  selector:
+    app: fx-service
+  ports:
+    - protocol: TCP
+      port: 50056
+      targetPort: 50056
+  type: ClusterIP

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-gateway-config
+  namespace: sa
+data:
+  PORT: "3000"
+  AUTH_SERVICE_URL: "auth-service:50051"
+  RESTAURANT_SERVICE_URL: "restaurant-service:50052"
+  ORDER_SERVICE_URL: "order-service:50053"
+  DELIVERY_SERVICE_URL: "delivery-service:50054"
+  PAYMENT_SERVICE_URL: "payment-service:50055"
+  FX_SERVICE_URL: "fx-service:50056"

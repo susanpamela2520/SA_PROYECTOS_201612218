@@ -32,7 +32,7 @@ const protoPathRoot = existsSync(join(process.cwd(), 'dist/proto'))
         options: {
           package: 'restaurant',
           protoPath: join(protoPathRoot, 'restaurant.proto'),
-          url: 'localhost:50052',
+          url: process.env.RESTAURANT_SERVICE_URL || 'restaurant-service:50052',
         },
       },
       {
@@ -41,7 +41,7 @@ const protoPathRoot = existsSync(join(process.cwd(), 'dist/proto'))
         options: {
           package: 'order',
           protoPath: join(protoPathRoot, 'order.proto'),
-          url: 'localhost:50053',
+          url: process.env.ORDER_SERVICE_URL || 'order-service:50053',
         },
       },
       {
@@ -50,7 +50,7 @@ const protoPathRoot = existsSync(join(process.cwd(), 'dist/proto'))
         options: {
           package: 'delivery',
           protoPath: join(protoPathRoot, 'delivery.proto'),
-          url: 'localhost:50054', // Puerto del nuevo microservicio (asegúrate que coincida con docker-compose)
+          url: process.env.DELIVERY_SERVICE_URL || 'delivery-service:50054', // Puerto del nuevo microservicio (asegúrate que coincida con docker-compose)
         },
       },
       {
@@ -59,7 +59,7 @@ const protoPathRoot = existsSync(join(process.cwd(), 'dist/proto'))
         options: {
           package: 'payment',
           protoPath: join(protoPathRoot, 'payment.proto'), // Ajusta la ruta a tu carpeta proto
-          url: '0.0.0.0:50055', // El puerto que pusimos en el payment-service
+          url: process.env.PAYMENT_SERVICE_URL || 'payment-service:50055', // El puerto que pusimos en el payment-service
         },
       },
       {
@@ -68,7 +68,7 @@ const protoPathRoot = existsSync(join(process.cwd(), 'dist/proto'))
         options: {
           package: 'fx',
           protoPath: join(protoPathRoot, 'fx.proto'), // Ajusta la ruta a tu carpeta proto
-          url: '0.0.0.0:50056', // El puerto que pusimos en el payment-service
+          url: process.env.FX_SERVICE_URL || 'fx-service:50056', // El puerto que pusimos en el payment-service
         },
       },
     ]),

@@ -17,14 +17,17 @@ import { Wallet } from './entities/wallet.entity';
         options: {
           package: 'order', // Debe coincidir con tu order.proto
           protoPath: join(__dirname, '../proto/order.proto'),
-          url: 'localhost:50053', // Nombre del contenedor de órdenes en Docker
+          url: process.env.ORDER_SERVICE_URL || 'order-service:50053', // Nombre del contenedor de órdenes en Docker
         },
       },
       {
         name: 'PAYMENT_QUEUE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://guest:guest@127.0.0.1:5672'],
+          urls: [
+            process.env.RABBITMQ_URL ||
+              'amqp://admin:123456@rabbitmq-service:5672',
+          ],
           queue: 'payment_queue',
           queueOptions: { durable: false },
         },

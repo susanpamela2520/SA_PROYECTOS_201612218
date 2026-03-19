@@ -33,7 +33,9 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
-      urls: ['amqp://guest:guest@127.0.0.1:5672'],
+      urls: [
+        process.env.RABBITMQ_URL || 'amqp://admin:123456@rabbitmq-service:5672',
+      ],
       queue: 'delivery_queue', // La cola que creamos en el Order Service
       queueOptions: { durable: false },
     },

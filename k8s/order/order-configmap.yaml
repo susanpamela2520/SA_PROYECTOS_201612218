@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order-service-config
+  namespace: sa
+data:
+  PORT: "50053"
+  DB_HOST_ORDER: "order-db-service"
+  DB_PORT: "5432"
+  DB_USER: "postgres"
+  DB_NAME_ORDER: "order_db"
+  RABBITMQ_URL: "amqp://admin:123456@rabbitmq-service:5672"

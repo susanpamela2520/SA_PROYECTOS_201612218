@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fx-redis-pvc
+  namespace: sa
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fx-redis
+  namespace: sa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fx-redis
+  template:
+    metadata:
+      labels:
+        app: fx-redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          args: ["--appendonly", "yes"]
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          volumeMounts:
+            - name: fx-redis-storage
+              mountPath: /data
+      volumes:
+        - name: fx-redis-storage
+          persistentVolumeClaim:
+            claimName: fx-redis-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fx-redis-service
+  namespace: sa
+spec:
+  selector:
+    app: fx-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+  type: ClusterIP

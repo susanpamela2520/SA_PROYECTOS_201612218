@@ -9,11 +9,11 @@ import { Delivery } from './delivery/entities/delivery.entity';
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST_REST,
+      host: process.env.DB_HOST_DELIVERY,
       port: Number(process.env.DB_PORT),
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME_REST,
+      database: process.env.DB_NAME_DELIVERY,
       entities: [Delivery],
       synchronize: true,
       ssl: false,

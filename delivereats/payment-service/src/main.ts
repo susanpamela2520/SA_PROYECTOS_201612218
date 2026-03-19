@@ -25,7 +25,7 @@ async function bootstrap() {
     options: {
       package: 'payment',
       protoPath: join(__dirname, 'proto/payment.proto'),
-      url: '0.0.0.0:50055', // Puerto exclusivo para Pagos
+      url: `0.0.0.0:${process.env.PORT || 50055}`, // Puerto exclusivo para
     },
   });
 
@@ -33,7 +33,9 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
-      urls: ['amqp://guest:guest@127.0.0.1:5672'],
+      urls: [
+        process.env.RABBITMQ_URL || 'amqp://admin:123456@rabbitmq-service:5672',
+      ],
       queue: 'payment_queue',
       queueOptions: { durable: false },
     },
@@ -41,6 +43,8 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
   await app.init();
-  console.log('Payment Microservice is listening on port 50055');
+  console.log(
+    `Payment Microservice is listening on port ${process.env.PORT || 50055}`,
+  );
 }
 bootstrap();

@@ -13,9 +13,9 @@ import * as redisStore from 'cache-manager-redis-store';
     CacheModule.register({
       isGlobal: true,
       store: redisStore,
-      host: process.env.DB_HOST_REST,
+      host: process.env.DB_HOST_FX,
       port: Number(process.env.DB_PORT),
-      ttl: Number(process.env.DB_TTL),
+      ttl: Number(process.env.CACHE_TTL),
     }),
     FxModule,
   ],

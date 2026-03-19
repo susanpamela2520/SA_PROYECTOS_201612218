@@ -6,6 +6,9 @@ import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
+const rabbitUrl =
+  process.env.RABBITMQ_URL || 'amqp://admin:123456@rabbitmq-service:5672';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([Order, OrderItem]),
@@ -14,8 +17,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: 'RESTAURANT_QUEUE', // Nombre para inyectarlo
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://guest:guest@localhost:5672'], // Ojo con la URL si es Docker
-          queue: 'orders_queue', // <--- Nombre importante
+          urls: [rabbitUrl], // Ojo con la URL si es Docker
+          queue: 'orders_queue', // <--- Nombre
           queueOptions: {
             durable: false,
           },
@@ -25,7 +28,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: 'DELIVERY_QUEUE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://guest:guest@127.0.0.1:5672'],
+          urls: [rabbitUrl],
           queue: 'delivery_queue', // El Delivery Service escuchará aquí
           queueOptions: { durable: false },
         },
@@ -34,7 +37,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: 'PAYMENT_QUEUE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://guest:guest@127.0.0.1:5672'],
+          urls: [rabbitUrl],
           queue: 'payment_queue',
           queueOptions: { durable: false },
         },

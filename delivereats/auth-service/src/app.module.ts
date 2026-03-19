@@ -21,7 +21,7 @@ import { User } from './auth/user.entity';
       ssl: false,
     }),
 
-    // Importamos el módulo de Auth que creamos en el paso 4
+    // Importamos el módulo de Auth que creamos en el paso
     AuthModule,
   ],
 })

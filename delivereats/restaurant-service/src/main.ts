@@ -8,18 +8,20 @@ async function bootstrap() {
   const app = await NestFactory.create<INestApplication>(AppModule);
 
   app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.GRPC, // Comunicación vía gRPC [cite: 38]
+    transport: Transport.GRPC, // Comunicación vía gRPC
     options: {
       package: 'restaurant', // Debe coincidir con el package del .proto
       protoPath: join(__dirname, 'proto/restaurant.proto'), // Ruta al archivo proto
-      url: '0.0.0.0:50052', // Puerto del microservicio Auth
+      url: `0.0.0.0:${process.env.PORT || 50052}`,
     },
   });
 
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
-      urls: ['amqp://guest:guest@127.0.0.1:5672'],
+      urls: [
+        process.env.RABBITMQ_URL || 'amqp://admin:123456@rabbitmq-service:5672',
+      ],
       queue: 'orders_queue',
       queueOptions: {
         durable: false,

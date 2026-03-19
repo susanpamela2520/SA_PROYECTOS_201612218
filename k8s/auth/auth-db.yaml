@@ -1,0 +1,83 @@
+# 1. El Almacenamiento (Para que no se borren tus datos al reiniciar)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: auth-db-pvc
+  namespace: sa
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi # Espacio en disco en Google Cloud
+---
+# 2. El motor de Postgres (Deployment)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-db
+  namespace: sa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-db
+  template:
+    metadata:
+      labels:
+        app: auth-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest # <-- AQUÍ está la imagen de Postgres
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: "auth_db"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secrets # Usamos el secreto que ya definimos
+                  key: DB_PASSWORD
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          volumeMounts:
+            - name: auth-db-storage
+              mountPath: /var/lib/postgresql
+      volumes:
+        - name: auth-db-storage
+          persistentVolumeClaim:
+            claimName: auth-db-pvc
+---
+# 3. El punto de conexión (Service)
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-db-service # <-- Este nombre es el que usa tu app en DB_HOST
+  namespace: sa
+spec:
+  selector:
+    app: auth-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP

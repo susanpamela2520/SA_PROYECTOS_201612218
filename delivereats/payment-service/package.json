@@ -79,7 +79,6 @@
       "!src/**/*.dto.ts",
       "!src/**/*.entity.ts",
       "!src/**/*.proto"
-      
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
@@ -89,7 +88,6 @@
         "functions": 70,
         "lines": 70,
         "statements": 70
-        
       }
     }
   }

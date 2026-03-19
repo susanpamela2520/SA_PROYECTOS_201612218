@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: delivery-service-config
+  namespace: sa
+data:
+  PORT: "50054"
+  DB_HOST_DELIVERY: "delivery-db-service"
+  DB_PORT: "5432"
+  DB_USER: "postgres"
+  DB_NAME_DELIVERY: "delivery_db"
+  RABBITMQ_URL: "amqp://admin:123456@rabbitmq-service:5672"
+  ORDER_SERVICE_URL: "order-service:50053"
