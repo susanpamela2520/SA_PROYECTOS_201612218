@@ -93,4 +93,33 @@ export class RestaurantService {
         (result.affected || 0) > 0 ? 'Plato eliminado' : 'Plato no encontrado',
     };
   }
+
+  async updateRestaurantRating(data: { restaurantId: number; rating: number }) {
+    // 1. Buscamos el restaurante
+    const restaurant = await this.restaurantRepo.findOne({
+      where: { id: data.restaurantId },
+    });
+
+    if (!restaurant) {
+      console.error(
+        `[Error] Restaurante ${data.restaurantId} no encontrado para calificar.`,
+      );
+      return;
+    }
+
+    // 2. Calculamos el nuevo promedio matemático
+    // (Promedio actual * cantidad de calificaciones) + nueva calificación / (cantidad + 1)
+    const totalScore =
+      Number(restaurant.rating) * restaurant.ratingCount + data.rating;
+
+    restaurant.ratingCount += 1;
+    restaurant.rating = totalScore / restaurant.ratingCount;
+
+    // 3. Guardamos en Base de Datos
+    await this.restaurantRepo.save(restaurant);
+
+    console.log(
+      `[Restaurante] Promedio de "${restaurant.name}" actualizado a ${restaurant.rating.toFixed(1)}  (Basado en ${restaurant.ratingCount} reviews)`,
+    );
+  }
 }

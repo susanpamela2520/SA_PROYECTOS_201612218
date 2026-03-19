@@ -1,6 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { RestaurantService } from './restaurant.service';
+import { EventPattern, Payload } from '@nestjs/microservices';
 
 @Controller()
 export class RestaurantController {
@@ -51,5 +52,24 @@ export class RestaurantController {
   @GrpcMethod('RestaurantService', 'DeleteMenuItem')
   deleteMenuItem(data: { id: number }) {
     return this.restaurantService.deleteMenuItem(data.id);
+  }
+
+  @EventPattern('new_order_placed')
+  async handleNewOrder(@Payload() data: any) {
+    console.log('NUEVO PEDIDO RECIBIDO EN COCINA:', data);
+    setTimeout(() => {
+      console.log(`Orden ${data.orderId} aceptada y en preparación.`);
+    }, 2000);
+  }
+
+  @EventPattern('order_rated')
+  async handleOrderRated(@Payload() data: any) {
+    console.log(`\n📥 [RabbitMQ] Evento recibido: 'order_rated'`);
+    console.log(
+      `El restaurante ${data.restaurantId} recibió ${data.rating} estrellas por la orden #${data.orderId}`,
+    );
+
+    // Llamamos al servicio para actualizar la BD
+    await this.restaurantService.updateRestaurantRating(data);
   }
 }

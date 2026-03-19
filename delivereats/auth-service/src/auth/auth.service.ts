@@ -118,7 +118,6 @@ export class AuthService {
         };
       }
 
-      // 3. Token válido
       return {
         status: HttpStatus.OK,
         error: null,

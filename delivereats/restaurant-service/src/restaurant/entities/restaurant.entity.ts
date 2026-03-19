@@ -15,6 +15,10 @@ export class Restaurant {
   horario: string;
   @Column()
   calificacion: string;
+  @Column({ type: 'int', default: 0 })
+  ratingCount: number;
+  @Column({ type: 'decimal', precision: 3, scale: 2, default: 0 })
+  rating: number;
 
   @OneToMany(() => MenuItem, (menuItem) => menuItem.restaurant)
   menu: MenuItem[];

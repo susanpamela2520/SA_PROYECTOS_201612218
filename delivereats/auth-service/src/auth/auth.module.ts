@@ -9,9 +9,8 @@ import { AuthService } from './auth.service';
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      secret: 'SECRET_KEY_SEGURA', // EN PRODUCCION USAR .ENV
+      secret: 'SECRET_KEY_SEGURA',
       signOptions: { expiresIn: '5h' },
-      
     }),
   ],
   controllers: [AuthController],

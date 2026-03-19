@@ -24,7 +24,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 
 # Exponemos el puerto (esto es informativo, se define en el compose)
-EXPOSE 3000
+EXPOSE 50051
 
 # Comando para arrancar el microservicio
 CMD ["npm", "run", "start:prod"]
