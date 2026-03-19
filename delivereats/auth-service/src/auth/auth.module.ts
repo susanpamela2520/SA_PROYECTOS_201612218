@@ -11,6 +11,7 @@ import { AuthService } from './auth.service';
     JwtModule.register({
       secret: 'SECRET_KEY_SEGURA', // EN PRODUCCION USAR .ENV
       signOptions: { expiresIn: '5h' },
+      
     }),
   ],
   controllers: [AuthController],
