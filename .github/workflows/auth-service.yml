@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "delivereats/auth-service/**" # Solo se activa si hay cambios en el servicio de Auth
+      - "delivereats/auth-service/**" #si hay cambios en el servicio de Auth se activa
 
 jobs:
   ci-cd-pipeline:
