@@ -9,7 +9,7 @@ metadata:
   namespace: sa
 spec:
   rules:
-    - host: 34.28.178.39.nip.io #IP ingress controller (nginx)
+    - host: 34.44.134.32.nip.io #IP ingress controller (nginx)
       http:
         paths:
           - path: /
